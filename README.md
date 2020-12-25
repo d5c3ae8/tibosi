@@ -13,5 +13,5 @@ document.querySelectorAll("[data-paperid]").forEach(function(item) {
 });
 completion(result);
 
-3.查看试卷: https://d5c3ae8.github.io/tools/tibosi.html?id=
+3.查看试卷: https://d5c3ae8.github.io/tibosi/?id=
 ```
