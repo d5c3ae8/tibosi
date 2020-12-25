@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>tibosi</title>
+        <style>
+            ol {
+                margin-top: -1em;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="main">正在加载中......</div>
+        <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                let count = 1;
+
+                function image(string) {
+                    return string.replace(/\[([^\]]+)\]/g, function(match, object) {
+                        return `<img src="https://static.tibosi.com/tk_img/${object}">`;
+                    });
+                }
+
+                function items(selected) {
+                    return image(`<ol type="A"><li>${selected.join("</li><li>")}</li></ol>`);
+                }
+
+                function ATEST(list) {
+                    for (let item of list) {
+                        $("#main").append(`<h5>${count++}. ${image(item.Title)} ${item.Answer}</h5>`);
+                        $("#main").append(items(item.SelectedItem));
+                    }
+                }
+
+                function BTEST(list) {
+                    for (let item of list) {
+                        for (let BTestItem of item.BTestItem) {
+                            $("#main").append(`<h5>${count++}. ${image(BTestItem.Title)} ${BTestItem.Answer}</h5>`);
+                            $("#main").append(items(item.SelectedItem));
+                        }
+                    }
+                }
+
+                function A3TEST(list) {
+                    for (let item of list) {
+                        for (let A3TestItem of item.A3TestItem) {
+                            $("#main").append(`<h5>${count++}. ${image(item.MainTitle)}<br>问题：${image(A3TestItem.Title)} ${A3TestItem.Answer}</h5>`);
+                            $("#main").append(items(A3TestItem.SelectedItem));
+                        }
+                    }
+                }
+
+                $.getJSON("https://tibosi-qc2kgjza7y91.runkit.sh/" + location.search, function(res) {
+                    $("#main").empty();
+                    for (let item of res.data.testList) {
+                        let list = item.TestList;
+                        switch (item.Type) {
+                        case "ATEST":
+                            ATEST(list);
+                            break;
+                        case "BTEST":
+                            BTEST(list);
+                            break;
+                        case "A3TEST":
+                            A3TEST(list);
+                            break;
+                        default:
+                            alert("未维护的题型: " + item.Type);
+                            break;
+                        }
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
